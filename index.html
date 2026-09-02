@@ -596,6 +596,55 @@
       color: var(--navy);
     }
 
+
+    .footer-stats {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 0;
+      min-width: 300px;
+    }
+
+    .footer-stats-label {
+      color: #f4c733;
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-right: 2px;
+    }
+
+    .footer-stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      color: #d6e0f6;
+      font-size: .76rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .footer-stat-pill strong {
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 900;
+    }
+
+    .footer-stats-note {
+      flex-basis: 100%;
+      color: #92a1bd;
+      font-size: .64rem;
+      text-align: center;
+      margin-top: 1px;
+    }
+
     footer {
       background: var(--navy);
       color: #d6e0f6;
@@ -605,7 +654,7 @@
 
     .footer-grid {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       gap: 24px;
       align-items: center;
     }
@@ -663,6 +712,11 @@
     }
 
     @media (max-width: 980px) {
+
+      .stats-intro {
+        grid-column: 1 / -1;
+        text-align: center;
+      }
       .hero-grid {
         grid-template-columns: 1fr;
         gap: 34px;
@@ -690,6 +744,15 @@
 
       .footer-grid {
         grid-template-columns: 1fr;
+      }
+
+      .footer-stats {
+        justify-content: flex-start;
+        min-width: 0;
+      }
+
+      .footer-stats-note {
+        text-align: left;
       }
 
       .social {
@@ -795,6 +858,24 @@
       .social a {
         width: 100%;
         justify-content: center;
+      }
+
+
+      .footer-stats {
+        justify-content: flex-start;
+      }
+
+      .footer-stats-note {
+        text-align: left;
+      }
+
+      .stats-intro,
+      .stats-note {
+        grid-column: 1;
+      }
+
+      .stat-card {
+        min-height: 82px;
       }
     }
   </style>
@@ -962,7 +1043,7 @@
       </div>
     </section>
 
-    <section class="container" style="padding-bottom:72px;">
+    <section class="container" style="padding-bottom:34px;">
       <div class="note-box" id="nota">
         <strong>Nota penting:</strong>
         Semua maklumat dalam portal ini adalah untuk tujuan panduan awal.
@@ -979,6 +1060,14 @@
         <div class="footer-brand">
           <strong>Portal Hala Tuju Selepas SPM</strong>
           <span>Portal awam untuk membantu murid dan ibu bapa meneroka hala tuju selepas SPM.</span>
+        </div>
+
+        <div class="footer-stats" aria-label="Statistik portal">
+          <span class="footer-stats-label">Statistik</span>
+          <span class="footer-stat-pill">Unik <strong id="uniqueVisitors">—</strong></span>
+          <span class="footer-stat-pill">Lawatan <strong id="totalVisits">—</strong></span>
+          <span class="footer-stat-pill">Hari ini <strong id="todayVisits">—</strong></span>
+          <span class="footer-stats-note" id="statsNote">Memuatkan statistik…</span>
         </div>
 
         <div class="social">
@@ -1019,16 +1108,41 @@
       return alternate ? alternate.href : "https://blog.cikgumuiez.com/";
     }
 
-    function getThumb(entry) {
-      if (entry.media$thumbnail && entry.media$thumbnail.url) {
-        return entry.media$thumbnail.url
-          .replace(/\/s72-c\//, "/s320/")
-          .replace(/\/s72-c$/, "/s320");
-      }
+    function normalizeBloggerImage(url) {
+      return String(url || "")
+        .replace(/\/s\d+(?:-c)?\//i, "/s480/")
+        .replace(/=s\d+(?:-c)?(?:-[a-z0-9-]+)?(?=$|[&#?])/i, "=s480")
+        .replace(/\/w\d+-h\d+(?:-[a-z0-9-]+)?\//i, "/s480/");
+    }
 
+    function getThumb(entry) {
       const raw = (entry.content && entry.content.$t) || (entry.summary && entry.summary.$t) || "";
       const match = raw.match(/<img[^>]+src=["']([^"']+)["']/i);
-      return match ? match[1] : "";
+      const contentImage = match ? normalizeBloggerImage(match[1]) : "";
+
+      if (entry.media$thumbnail && entry.media$thumbnail.url) {
+        return {
+          primary: normalizeBloggerImage(entry.media$thumbnail.url),
+          fallback: contentImage
+        };
+      }
+
+      return { primary: contentImage, fallback: "" };
+    }
+
+    function articleThumbError(img) {
+      const fallback = img.dataset.fallback || "";
+      if (fallback && img.src !== fallback) {
+        img.dataset.fallback = "";
+        img.src = fallback;
+        return;
+      }
+
+      const box = document.createElement("div");
+      box.className = "article-thumb-fallback";
+      box.setAttribute("aria-hidden", "true");
+      box.textContent = "✍️";
+      img.replaceWith(box);
     }
 
     function formatPostDate(value) {
@@ -1058,8 +1172,8 @@
         const rawText = (entry.summary && entry.summary.$t) || (entry.content && entry.content.$t) || "";
         const excerpt = escapeHtml(stripHtml(rawText).slice(0, 150));
         const thumb = getThumb(entry);
-        const visual = thumb
-          ? `<img class="article-thumb" src="${escapeHtml(thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer" />`
+        const visual = thumb.primary
+          ? `<img class="article-thumb" src="${escapeHtml(thumb.primary)}" data-fallback="${escapeHtml(thumb.fallback || "")}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="articleThumbError(this)" />`
           : '<div class="article-thumb-fallback" aria-hidden="true">✍️</div>';
 
         return `
@@ -1080,6 +1194,55 @@
         grid.innerHTML = '<div class="blog-status">Artikel belum dapat dimuatkan sekarang. <a href="https://blog.cikgumuiez.com/" target="_blank" rel="noopener"><strong>Buka Blog Cikgu Muiez →</strong></a></div>';
       }
     }
+
+    const VISITOR_STATS_API = "https://script.google.com/macros/s/AKfycbyO3qETmivNq2_6P3Qcp5a5HvqKNocb-MVSIHVEoqytSEqf3GgG6GXmHqdg9Psliw_U/exec";
+
+    function getPortalVisitorId() {
+      const key = "cikgumuiezPortalVisitorId";
+      let id = localStorage.getItem(key);
+      if (!id) {
+        const randomPart = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+        id = `CM-${randomPart}`;
+        localStorage.setItem(key, id);
+      }
+      return id;
+    }
+
+    function formatStatNumber(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n.toLocaleString("ms-MY") : "—";
+    }
+
+    async function loadVisitorStats() {
+      const uniqueEl = document.getElementById("uniqueVisitors");
+      const totalEl = document.getElementById("totalVisits");
+      const todayEl = document.getElementById("todayVisits");
+      const noteEl = document.getElementById("statsNote");
+      if (!uniqueEl || !totalEl || !todayEl || !noteEl) return;
+
+      try {
+        const visitorId = encodeURIComponent(getPortalVisitorId());
+        const response = await fetch(`${VISITOR_STATS_API}?action=visit&visitorId=${visitorId}&t=${Date.now()}`, {
+          method: "GET",
+          cache: "no-store"
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!data || data.ok !== true) throw new Error((data && data.error) || "Respons statistik tidak sah");
+
+        uniqueEl.textContent = formatStatNumber(data.uniqueVisitors);
+        totalEl.textContent = formatStatNumber(data.totalVisits);
+        todayEl.textContent = formatStatNumber(data.todayVisits);
+        noteEl.textContent = "Pelawat unik dikira berdasarkan browser/peranti.";
+      } catch (error) {
+        console.warn("Statistik pelawat tidak dapat dimuatkan:", error);
+        noteEl.textContent = "Statistik tidak dapat dimuatkan buat masa ini.";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadVisitorStats);
 
     (function loadBlogFeed() {
       const feed = document.createElement("script");
