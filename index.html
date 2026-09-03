@@ -601,10 +601,9 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin: 0;
-      min-width: 300px;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
     }
 
     .footer-stats-label {
@@ -640,8 +639,8 @@
     .footer-stats-note {
       flex-basis: 100%;
       color: #92a1bd;
-      font-size: .64rem;
-      text-align: center;
+      font-size: .68rem;
+      text-align: right;
       margin-top: 1px;
     }
 
@@ -654,7 +653,7 @@
 
     .footer-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-columns: 1fr auto;
       gap: 24px;
       align-items: center;
     }
@@ -744,15 +743,6 @@
 
       .footer-grid {
         grid-template-columns: 1fr;
-      }
-
-      .footer-stats {
-        justify-content: flex-start;
-        min-width: 0;
-      }
-
-      .footer-stats-note {
-        text-align: left;
       }
 
       .social {
@@ -977,6 +967,20 @@
             <span class="open-link">Buka SubjekMatch →</span>
           </a>
 
+          <a class="portal-card" href="https://polyccmatch.cikgumuiez.com/" target="_blank" rel="noopener">
+            <div>
+              <div class="badge">Politeknik & Kolej Komuniti</div>
+              <div class="icon">🎓</div>
+              <h3>PolyCCMatch</h3>
+              <p>
+                Masukkan keputusan SPM dan minat anda untuk meneroka program
+                Politeknik serta Kolej Komuniti yang sesuai, termasuk laluan
+                alternatif dan tempat program ditawarkan.
+              </p>
+            </div>
+            <span class="open-link">Buka PolyCCMatch →</span>
+          </a>
+
           <a class="portal-card" href="https://merit.cikgumuiez.com/" target="_blank" rel="noopener">
             <div>
               <div class="badge">Merit SPM</div>
@@ -1062,19 +1066,20 @@
           <span>Portal awam untuk membantu murid dan ibu bapa meneroka hala tuju selepas SPM.</span>
         </div>
 
-        <div class="footer-stats" aria-label="Statistik portal">
-          <span class="footer-stats-label">Statistik</span>
-          <span class="footer-stat-pill">Unik <strong id="uniqueVisitors">—</strong></span>
-          <span class="footer-stat-pill">Lawatan <strong id="totalVisits">—</strong></span>
-          <span class="footer-stat-pill">Hari ini <strong id="todayVisits">—</strong></span>
-          <span class="footer-stats-note" id="statsNote">Memuatkan statistik…</span>
-        </div>
-
-        <div class="social">
-          <a href="https://web.facebook.com/abdulmuiez/" target="_blank" rel="noopener">📘 Facebook</a>
-          <a href="https://web.facebook.com/KisahSeorangLobam" target="_blank" rel="noopener">📖 Kisah Seorang Lobam</a>
-          <a href="https://www.tiktok.com/@abdulmuiezruslee" target="_blank" rel="noopener">🎵 TikTok</a>
-          <a href="https://www.youtube.com/@AbdulMuiezRuslee" target="_blank" rel="noopener">▶️ YouTube</a>
+        <div>
+          <div class="social">
+            <a href="https://web.facebook.com/abdulmuiez/" target="_blank" rel="noopener">📘 Facebook</a>
+            <a href="https://web.facebook.com/KisahSeorangLobam" target="_blank" rel="noopener">📖 Kisah Seorang Lobam</a>
+            <a href="https://www.tiktok.com/@abdulmuiezruslee" target="_blank" rel="noopener">🎵 TikTok</a>
+            <a href="https://www.youtube.com/@AbdulMuiezRuslee" target="_blank" rel="noopener">▶️ YouTube</a>
+          </div>
+          <div class="footer-stats" aria-label="Statistik portal">
+            <span class="footer-stats-label">Statistik</span>
+            <span class="footer-stat-pill">Unik <strong id="uniqueVisitors">—</strong></span>
+            <span class="footer-stat-pill">Lawatan <strong id="totalVisits">—</strong></span>
+            <span class="footer-stat-pill">Hari ini <strong id="todayVisits">—</strong></span>
+            <span class="footer-stats-note" id="statsNote">Memuatkan statistik…</span>
+          </div>
         </div>
       </div>
 
