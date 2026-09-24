@@ -1346,7 +1346,7 @@
   </script>
 
 
-  <button class="cm-chat-launcher" type="button" onclick="openCikguMuiezChat()" aria-label="Chat dengan Cikgu Muiez">
+  <button id="cmChatLauncher" class="cm-chat-launcher" type="button" onclick="openCikguMuiezChat()" aria-label="Chat dengan Cikgu Muiez">
     <span class="cm-chat-dot" aria-hidden="true"></span>
     <span>💬 Chat dengan Cikgu Muiez</span>
   </button>
@@ -1355,9 +1355,41 @@
   <!--Start of Tawk.to Script-->
   <script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  function openCikguMuiezChat(){
-    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-      window.Tawk_API.maximize();
+  var cmChatReady = false;
+
+  Tawk_API.onBeforeLoad = function(){
+    if (typeof Tawk_API.hideWidget === 'function') Tawk_API.hideWidget();
+  };
+
+  Tawk_API.onLoad = function(){
+    cmChatReady = true;
+    if (typeof Tawk_API.hideWidget === 'function') Tawk_API.hideWidget();
+  };
+
+  Tawk_API.onChatMaximized = function(){
+    var launcher = document.getElementById('cmChatLauncher');
+    if (launcher) launcher.style.display = 'none';
+  };
+
+  Tawk_API.onChatMinimized = function(){
+    if (typeof Tawk_API.hideWidget === 'function') Tawk_API.hideWidget();
+    var launcher = document.getElementById('cmChatLauncher');
+    if (launcher) launcher.style.display = 'inline-flex';
+  };
+
+  function openCikguMuiezChat(attempt){
+    attempt = attempt || 0;
+    if (window.Tawk_API && typeof window.Tawk_API.showWidget === 'function' && typeof window.Tawk_API.maximize === 'function') {
+      window.Tawk_API.showWidget();
+      setTimeout(function(){
+        window.Tawk_API.maximize();
+        var launcher = document.getElementById('cmChatLauncher');
+        if (launcher) launcher.style.display = 'none';
+      }, 80);
+      return;
+    }
+    if (attempt < 50) {
+      setTimeout(function(){ openCikguMuiezChat(attempt + 1); }, 100);
     }
   }
   (function(){
