@@ -868,6 +868,54 @@
         min-height: 82px;
       }
     }
+
+    /* Floating live chat launcher - shared across CikguMuiez & MyPath360 */
+    .cm-chat-launcher {
+      position: fixed;
+      right: 18px;
+      bottom: 88px;
+      z-index: 2147483000;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      background: #10254f;
+      color: #fff;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 14px 34px rgba(16,37,79,.28);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .cm-chat-launcher:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(16,37,79,.34);
+    }
+
+    .cm-chat-launcher .cm-chat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #35d07f;
+      box-shadow: 0 0 0 4px rgba(53,208,127,.16);
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      .cm-chat-launcher {
+        right: 12px;
+        bottom: 82px;
+        min-height: 48px;
+        padding: 0 14px;
+        font-size: .82rem;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1296,6 +1344,32 @@
       document.body.appendChild(feed);
     })();
   </script>
+
+
+  <button class="cm-chat-launcher" type="button" onclick="openCikguMuiezChat()" aria-label="Chat dengan Cikgu Muiez">
+    <span class="cm-chat-dot" aria-hidden="true"></span>
+    <span>💬 Chat dengan Cikgu Muiez</span>
+  </button>
+
+
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  function openCikguMuiezChat(){
+    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+      window.Tawk_API.maximize();
+    }
+  }
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/6ab4ff8e894fa4344ac3f9ea/1k39gci2q';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
 
 </body>
 </html>
