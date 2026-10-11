@@ -918,15 +918,15 @@
 
 
     /* Shoutbox baru: terapung lebih tinggi dan responsif */
-    .cm-chat-launcher { bottom: 110px; }
+    .cm-chat-launcher { bottom: 206px; }
     .cm-shoutbox-panel {
       position: fixed;
       right: 18px;
-      bottom: 178px;
+      bottom: 274px;
       z-index: 2147483001;
       width: min(440px, calc(100vw - 28px));
-      height: min(670px, calc(100dvh - 195px));
-      min-height: 280px;
+      height: min(670px, calc(100dvh - 290px));
+      min-height: min(220px, calc(100dvh - 290px));
       display: flex;
       flex-direction: column;
       background: #fff;
@@ -958,11 +958,11 @@
     }
     #cmShoutboxFrame { border: 0; width: 100%; flex: 1 1 auto; min-height: 0; background: #f3f6fd; }
     @media (max-width: 640px) {
-      .cm-chat-launcher { bottom: 102px; }
+      .cm-chat-launcher { bottom: 198px; }
       .cm-shoutbox-panel {
-        right: 8px; bottom: 160px;
+        right: 8px; bottom: 256px;
         width: calc(100vw - 16px);
-        height: min(670px, calc(100dvh - 175px));
+        height: min(670px, calc(100dvh - 270px));
       }
     }
   </style>
@@ -1410,7 +1410,7 @@
         <button type="button" id="cmCloseChat" aria-label="Tutup chat" title="Tutup">✕</button>
       </div>
     </div>
-    <iframe id="cmShoutboxFrame" title="Shoutbox Cikgu Muiez" data-src="/tanya/" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write"></iframe>
+    <iframe id="cmShoutboxFrame" title="Shoutbox Cikgu Muiez" data-src="/tanya/?embed=1" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write"></iframe>
   </div>
   <script>
     (function () {
