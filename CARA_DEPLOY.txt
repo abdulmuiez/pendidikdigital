@@ -1,9 +1,1 @@
-CIKGUMUIEZ.COM - VERSI PWA
-
-1. Muat naik SEMUA fail dalam folder ini ke root hosting cikgumuiez.com (lokasi index.html sedia ada).
-2. Pastikan manifest.webmanifest dan service-worker.js boleh diakses di https://cikgumuiez.com/manifest.webmanifest dan https://cikgumuiez.com/service-worker.js.
-3. Android: Chrome > menu > Install app / Add to Home screen.
-4. iPhone: Safari > Share > Add to Home Screen.
-5. PWA memerlukan HTTPS. Kandungan luar dan sistem lain masih memerlukan internet; pemasangan tidak bermaksud semuanya boleh berfungsi offline.
-
-Fail index.html ialah HTML asal yang ditambah tag PWA dan service worker sahaja.
+VERSI CUBA: reka bentuk asal dengan butang Pasang App pada kanan atas. Tekan butang untuk panduan 3 titik Chrome Android. Muat naik semua fail ke direktori utama cikgumuiez.com. Gantikan index.html, jangan padam fail lain. Versi ini sengaja menunjukkan panduan (bukannya prompt native) untuk tujuan percubaan.

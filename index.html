@@ -6,14 +6,9 @@
   <title>Portal Hala Tuju Selepas SPM</title>
   <meta name="description" content="Portal awam untuk membantu murid, ibu bapa dan masyarakat meneroka hala tuju selepas SPM." />
   <meta name="theme-color" content="#f4c430" />
-
-  <!-- Cikgu Muiez PWA: aplikasi boleh dipasang pada telefon -->
   <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Cikgu Muiez" />
 
   <style>
     :root {
@@ -973,11 +968,46 @@
         height: min(670px, calc(100dvh - 175px));
       }
     }
+
+    /* Butang pemasangan di penjuru kanan atas hero - tanpa header tambahan */
+    .cm-install-topright { position:absolute; top:15px; right:max(16px, calc((100vw - 1180px)/2)); z-index:8; }
+    @media (max-width:640px) {
+      .hero { padding-top:100px; }
+      .cm-install-topright { top:18px; right:16px; }
+    }
+    .cm-install-button { appearance:none; border:0; background:#10254f; color:#fff; border-radius:999px;
+      padding:13px 25px; font:800 .95rem "Segoe UI",Arial,sans-serif; cursor:pointer;
+      box-shadow:0 10px 25px rgba(16,37,79,.22); transition:transform .18s ease,background .18s ease; }
+    .cm-install-button:hover { transform:translateY(-2px); background:#183b78; }
+    .cm-install-button:focus-visible, .cm-install-close:focus-visible, .cm-install-tabs button:focus-visible { outline:3px solid #d9a400; outline-offset:3px; }
+    .cm-install-overlay[hidden] { display:none!important; }
+    .cm-install-overlay { position:fixed; inset:0; z-index:2147483500; display:grid; place-items:center;
+      padding:16px; background:rgba(8,22,51,.65); }
+    .cm-install-modal { position:relative; background:#fff; width:min(440px,100%); max-height:calc(100dvh - 32px);
+      overflow-y:auto; border-radius:23px; padding:27px 23px 23px; color:#10254f;
+      box-shadow:0 30px 90px rgba(0,0,0,.28); }
+    .cm-install-modal h2 { font-size:1.45rem; line-height:1.24; padding-right:35px; margin:0 0 12px; }
+    .cm-install-close { position:absolute; right:16px; top:14px; border:0; background:#f1f3f7;
+      color:#10254f; border-radius:50%; width:36px; height:36px; cursor:pointer; font-size:23px; }
+    .cm-install-brand { text-align:center; margin:12px auto; }
+    .cm-install-brand img { width:85px; height:85px; border-radius:20px; }
+    .cm-install-brand p { margin:8px 0 0; font-size:.87rem; color:#4a5975; }
+    .cm-install-tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; background:#f3f5f8; border-radius:12px; padding:5px; margin:17px 0; }
+    .cm-install-tabs button { background:transparent; border:0; border-radius:9px; padding:10px 4px; color:#10254f;
+      cursor:pointer; font-weight:800; font-size:.82rem; }
+    .cm-install-tabs button[aria-selected="true"] { background:#f4c430; box-shadow:0 2px 7px rgba(0,0,0,.1); }
+    .cm-install-steps { padding-left:23px; margin:9px 0 16px; color:#293951; line-height:1.7; }
+    .cm-install-steps li { padding-left:4px; margin-bottom:6px; }
+    .cm-install-note { background:#fff7dd; border:1px solid #f0df99; border-radius:12px; padding:12px;
+      font-size:.81rem; color:#4c4f60; }
+    .cm-install-done { margin-top:17px; background:#10254f; border:0; color:#fff;
+      border-radius:12px; padding:12px; width:100%; cursor:pointer; font-weight:800; }
   </style>
 </head>
 <body>
 
   <header class="hero">
+    <div class="cm-install-topright"><button type="button" class="cm-install-button" id="cmInstallAppBtn">📲 Pasang App</button></div>
     <div class="container hero-grid">
 
       <div class="hero-copy">
@@ -1444,12 +1474,82 @@
     })();
   </script>
 
+
+  <div class="cm-install-overlay" id="cmInstallOverlay" hidden>
+    <section class="cm-install-modal" role="dialog" aria-modal="true" aria-labelledby="cmInstallHeading" tabindex="-1">
+      <button type="button" id="cmInstallClose" class="cm-install-close" aria-label="Tutup panduan">×</button>
+      <h2 id="cmInstallHeading">Pasang Aplikasi Cikgu Muiez</h2>
+      <div class="cm-install-brand"><img src="/icon-192.png" alt="Logo aplikasi Cikgu Muiez" />
+        <p>Akses portal terus daripada skrin utama peranti anda.</p></div>
+      <div class="cm-install-tabs" role="tablist" aria-label="Pilih peranti">
+        <button type="button" role="tab" id="cmTabAndroid" aria-selected="true" data-device="android">Android</button>
+        <button type="button" role="tab" id="cmTabIphone" aria-selected="false" data-device="iphone">iPhone</button>
+        <button type="button" role="tab" id="cmTabDesktop" aria-selected="false" data-device="desktop">Komputer</button>
+      </div>
+      <ol class="cm-install-steps" id="cmInstallSteps"></ol>
+      <p class="cm-install-note" id="cmInstallNote">Paparan pemasangan bergantung pada pelayar dan peranti anda.</p>
+      <button type="button" class="cm-install-done" id="cmInstallDone">Faham</button>
+    </section>
+  </div>
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js').catch(err => console.warn('PWA registration:', err));
-      });
+  (function () {
+    const btn = document.getElementById('cmInstallAppBtn');
+    const overlay = document.getElementById('cmInstallOverlay');
+    const modal = overlay.querySelector('.cm-install-modal');
+    const steps = document.getElementById('cmInstallSteps');
+    const tabs = Array.from(overlay.querySelectorAll('[data-device]'));
+    const notice = document.getElementById('cmInstallNote');
+    let deferredInstall = null;
+    let lastFocus = null;
+    const guides = {
+      android: ['Buka cikgumuiez.com menggunakan Google Chrome.', 'Tekan menu tiga titik (⋮) di penjuru atas.', 'Pilih Pasang aplikasi (Install app) atau Tambah pada skrin utama.'],
+      iphone: ['Buka cikgumuiez.com menggunakan Safari.', 'Tekan butang Kongsi (Share).', 'Pilih Tambah ke Skrin Utama (Add to Home Screen), kemudian tekan Tambah (Add).'],
+      desktop: ['Buka cikgumuiez.com menggunakan Chrome atau Microsoft Edge.', 'Tekan ikon Pasang aplikasi pada bar alamat, jika dipaparkan. Alternatifnya, lihat menu pelayar.', 'Sahkan pemasangan melalui butang Install / Pasang.']
+    };
+    function choose(device) {
+      tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.device === device)));
+      steps.replaceChildren(...guides[device].map(str => { const li = document.createElement('li'); li.textContent = str; return li; }));
+      notice.textContent = 'Pilihan pemasangan berbeza mengikut peranti dan pelayar. Sambungan internet diperlukan untuk kandungan terkini.';
     }
+    function openGuide(message) {
+      lastFocus = document.activeElement;
+      overlay.hidden = false;
+      const ua = navigator.userAgent;
+      choose(/iPhone|iPad|iPod/i.test(ua) ? 'iphone' : /Android/i.test(ua) ? 'android' : 'desktop');
+      if (message) notice.textContent = message;
+      modal.focus();
+      document.body.style.overflow = 'hidden';
+    }
+    function closeGuide() {
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      if(lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    }
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
+    window.addEventListener('appinstalled', () => { deferredInstall = null; });
+    btn.addEventListener('click', async () => {
+      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+        openGuide('Aplikasi Cikgu Muiez sudah dipasang dan sedang digunakan.');
+      } else { openGuide(); }
+    });
+    tabs.forEach(t => t.addEventListener('click', () => choose(t.dataset.device)));
+    document.getElementById('cmInstallClose').addEventListener('click', closeGuide);
+    document.getElementById('cmInstallDone').addEventListener('click', closeGuide);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeGuide(); });
+    document.addEventListener('keydown', e => {
+      if (overlay.hidden) return;
+      if (e.key === 'Escape') closeGuide();
+      if (e.key === 'Tab') {
+        const focusables = Array.from(overlay.querySelectorAll('button'));
+        const first=focusables[0], last=focusables[focusables.length-1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').catch(err => console.warn('PWA service worker:', err));
+    });
+  })();
   </script>
 </body>
 </html>
