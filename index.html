@@ -7,6 +7,14 @@
   <meta name="description" content="Portal awam untuk membantu murid, ibu bapa dan masyarakat meneroka hala tuju selepas SPM." />
   <meta name="theme-color" content="#f4c430" />
 
+  <!-- Cikgu Muiez PWA: aplikasi boleh dipasang pada telefon -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Cikgu Muiez" />
+
   <style>
     :root {
       --yellow: #f4c430;
@@ -918,15 +926,15 @@
 
 
     /* Shoutbox baru: terapung lebih tinggi dan responsif */
-    .cm-chat-launcher { bottom: 206px; }
+    .cm-chat-launcher { bottom: 110px; }
     .cm-shoutbox-panel {
       position: fixed;
       right: 18px;
-      bottom: 274px;
+      bottom: 178px;
       z-index: 2147483001;
       width: min(440px, calc(100vw - 28px));
-      height: min(670px, calc(100dvh - 290px));
-      min-height: min(220px, calc(100dvh - 290px));
+      height: min(670px, calc(100dvh - 195px));
+      min-height: 280px;
       display: flex;
       flex-direction: column;
       background: #fff;
@@ -948,7 +956,7 @@
     }
     .cm-shoutbox-heading { display: flex; flex-direction: column; line-height: 1.4; }
     .cm-shoutbox-heading strong { font-size: .95rem; }
-    .cm-shoutbox-heading span { font-size: .72rem; color: #dbe6fa; line-height: 1.45; max-width: 320px; }
+    .cm-shoutbox-heading span { font-size: .72rem; color: #dbe6fa; }
     .cm-shoutbox-actions { display: flex; gap: 8px; align-items: center; }
     .cm-shoutbox-actions button, .cm-shoutbox-actions a {
       display: grid; place-items: center; width: 34px; height: 34px;
@@ -958,11 +966,11 @@
     }
     #cmShoutboxFrame { border: 0; width: 100%; flex: 1 1 auto; min-height: 0; background: #f3f6fd; }
     @media (max-width: 640px) {
-      .cm-chat-launcher { bottom: 198px; }
+      .cm-chat-launcher { bottom: 102px; }
       .cm-shoutbox-panel {
-        right: 8px; bottom: 256px;
+        right: 8px; bottom: 160px;
         width: calc(100vw - 16px);
-        height: min(670px, calc(100dvh - 270px));
+        height: min(670px, calc(100dvh - 175px));
       }
     }
   </style>
@@ -1404,7 +1412,7 @@
   <!-- Shoutbox Cikgu Muiez: same-origin iframe, no Tawk.to -->
   <div id="cmShoutboxPanel" class="cm-shoutbox-panel" role="dialog" aria-label="Shoutbox Cikgu Muiez" aria-modal="false" hidden>
     <div class="cm-shoutbox-header">
-      <div class="cm-shoutbox-heading"><strong>💬 Tanya Cikgu Muiez</strong><span>Ada soalan? Tinggalkan di sini. Cikgu Muiez akan jawab kemudian. Jangan lupa datang semula untuk membaca jawapan.</span></div>
+      <div class="cm-shoutbox-heading"><strong>💬 Tanya Cikgu Muiez</strong><span>Umum atau Peribadi · Mesej tersimpan</span></div>
       <div class="cm-shoutbox-actions">
         <a href="/tanya/" target="_blank" rel="noopener" title="Buka halaman penuh" aria-label="Buka Shoutbox pada halaman penuh">↗</a>
         <button type="button" id="cmCloseChat" aria-label="Tutup chat" title="Tutup">✕</button>
@@ -1436,5 +1444,12 @@
     })();
   </script>
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').catch(err => console.warn('PWA registration:', err));
+      });
+    }
+  </script>
 </body>
 </html>

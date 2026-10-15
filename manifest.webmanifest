@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "Cikgu Muiez - Portal Hala Tuju Selepas SPM",
+  "short_name": "Cikgu Muiez",
+  "description": "Panduan hala tuju selepas SPM, semakan merit, padanan subjek dan maklumat pendidikan.",
+  "lang": "ms",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4c430",
+  "theme_color": "#f4c430",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
